@@ -1,32 +1,57 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
-
 import { useFormik } from "formik";
-const App = () => {
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      channel: '',
-    },
-    onSubmit: (values) => {
-      console.log("values of Form Submit", values)
-    }
-  });
 
+const initialValues = {
+  name: 'TEMP NAME',
+  email: '',
+  channel: '',
+}
+const onSubmit = values => {
+  console.log("values of Form Submit", values)
+}
+const validate = values => {
+  let errors = {}
+  if (!values.name) {
+    errors.name = 'Name Required';
+  }
+  if (!values.email) {
+    errors.email = 'Email Required';
+  } else if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(values.email)) {
+    errors.email = 'Invalid Email';
+  }
+  if (!values.channel) {
+    errors.channel = 'Channel Required';
+  }
+  return errors;
+}
+
+const App = () => {
+  // const formik = useFormik({
+  //   initialValues: initialValues,
+  //   onSubmit: onSubmit,
+  //   validate: validate,
+  // });
+  const formik = useFormik({ initialValues, onSubmit, validate, });
+
+  console.log("Form Touched===========", formik.touched)
   console.log("Form Values===========", formik.values)
 
   return (
     <div>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} >
         <label >Name</label>
-        <input type="text" name='name' onChange={formik.handleChange} value={formik.values.name} />
+        <input type="text" name='name' id='name' onChange={formik.handleChange} value={formik.values.name} onBlur={formik.handleBlur} />
+        {/* {formik.errors.name && <p>{formik.errors.name}</p>} */}
+        {formik.touched.name && formik.errors.name && formik.errors.name}
         <br />
         <label >Email</label>
-        <input type="text" name='email' onChange={formik.handleChange} value={formik.values.email} />
+        <input type="text" name='email' id='email' onChange={formik.handleChange} value={formik.values.email} onBlur={formik.handleBlur} />
+        {formik.touched.email && formik.errors.email && formik.errors.email}
         <br />
         <label >Channel</label>
-        <input type="text" name='channel' onChange={formik.handleChange} value={formik.values.channel} />
+        <input type="text" name='channel' id='channel' onChange={formik.handleChange} value={formik.values.channel} onBlur={formik.handleBlur} />
+        {formik.touched.channel && formik.errors.channel && formik.errors.channel}
         <br />
         <button type='submit' >Submit</button>
       </form>
