@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { useFormik } from "formik";
+// import {} from 'yup';
+import * as Yup from 'yup';
+
 
 const initialValues = {
   name: 'TEMP NAME',
@@ -26,13 +29,20 @@ const validate = values => {
   return errors;
 }
 
+const validationSchema = Yup.object({
+  name: Yup.string().required('Name Required Field'),
+  email: Yup.string().required('Email Required Field').email('Email Invalid Format'),
+  channel: Yup.string().required('Channel Required Field'),
+})
+
 const App = () => {
   // const formik = useFormik({
   //   initialValues: initialValues,
   //   onSubmit: onSubmit,
   //   validate: validate,
   // });
-  const formik = useFormik({ initialValues, onSubmit, validate, });
+  // const formik = useFormik({ initialValues, onSubmit, validate, });
+  const formik = useFormik({ initialValues, onSubmit, validationSchema });
 
   console.log("Form Touched===========", formik.touched)
   console.log("Form Values===========", formik.values)
